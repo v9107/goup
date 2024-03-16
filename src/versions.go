@@ -108,10 +108,6 @@ func GetLocalVersion() (LocalInstallation, error) {
 	version := strings.Split(strings.TrimSpace(strings.Replace(string(goVersion), "go version", "", 1)), " ")
 	osInfo := strings.Split(version[1], "/")
 
-	if err != nil {
-		return LocalInstallation{}, err
-	}
-
 	return LocalInstallation{
 		Installed: true,
 		Version:   version[0],
