@@ -1,10 +1,32 @@
 package src
 
 import (
-	"fmt"
 	"strconv"
-	"strings"
 )
+
+const (
+	LATEST_VERSION_URL string = "https://go.dev/dl/?mode=json"
+	DOWNLOAD_URL       string = "https://storage.googleapis.com/golang/"
+)
+
+func GetVersions(url string) (Versions, error) {
+	latestVerison, err := GetLatestVersion(url)
+
+	if err != nil {
+		return Versions{}, err
+	}
+
+	localVersion, err := GetLocalVersion()
+
+	if err != nil {
+		return Versions{}, err
+	}
+
+	return Versions{
+		LatestVersion: latestVerison,
+		LocalVersion:  localVersion,
+	}, nil
+}
 
 func convertVerion(versionArray []string) ([]uint, error) {
 
@@ -20,26 +42,4 @@ func convertVerion(versionArray []string) ([]uint, error) {
 
 	return userVersionInt, nil
 
-}
-
-func shouldUpdate(local, latest []uint) (bool, error) {
-	if len(local) != len(latest) {
-		return false, fmt.Errorf("cannot be compair local and latest go version")
-	}
-
-	for idx, value := range latest {
-		if local[idx] >= value {
-			return false, nil
-		}
-		if value > local[idx] {
-			return true, nil
-		}
-	}
-
-	return false, nil
-
-}
-
-func transform(word, replace, repalceWith string, occ int) string {
-	return strings.Replace(word, replace, repalceWith, occ)
 }

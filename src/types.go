@@ -23,11 +23,6 @@ type LocalInstallation struct {
 	Arch      string
 }
 
-type Update interface {
-	CheckForUpdates() (bool, error)
-	DownloadLatestVersion() error
-}
-
 type Versions struct {
 	LatestVersion APIResponse
 	LocalVersion  LocalInstallation
