@@ -23,7 +23,7 @@ func TestLocalVersion(t *testing.T) {
 
 	localVersion := strings.Split(strings.TrimSpace(strings.Replace(string(goVersion), "go version", "", 1)), " ")
 
-	if version.Version == localVersion[0] {
+	if version.Version != localVersion[0] {
 		t.Errorf("fetch version \"%s\" != \"%s\" actual version", version.Version, localVersion[0])
 	}
 }

@@ -28,7 +28,7 @@ func GetVersions(url string) (Versions, error) {
 	}, nil
 }
 
-func convertVerion(versionArray []string) ([]uint, error) {
+func ConvertVerion(versionArray []string) ([]uint, error) {
 
 	userVersionInt := make([]uint, len(versionArray))
 

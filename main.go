@@ -27,7 +27,7 @@ func main() {
 		return
 	}
 
-	fmt.Printf("New version is available %s -> %s\n", versions.LocalVersion.Version, versions.LatestVersion.Version)
+	log.Default().Printf("New version is available %s -> %s\n", versions.LocalVersion.Version, versions.LatestVersion.Version)
 	fmt.Print("Would you like to update [yes/no] (default is no): ")
 	fmt.Scan(&update)
 
@@ -35,9 +35,7 @@ func main() {
 		return
 	}
 
-	fmt.Println("updating the go installation (not really)")
-
-	if err := versions.DownloadLatestVersion(); err != nil {
+	if err := versions.DownloadLatestVersion(src.DOWNLOAD_URL); err != nil {
 		log.Fatal(err.Error())
 	}
 }

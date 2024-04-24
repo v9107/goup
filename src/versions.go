@@ -4,18 +4,21 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log"
+	"math"
 	"net/http"
+	"os"
 	"os/exec"
 	"strings"
 )
 
 func (v Versions) CheckForUpdates() (bool, error) {
-	latestVersion, err := convertVerion(strings.Split(strings.Replace(v.LatestVersion.Version, "go", "", 1), "."))
+	latestVersion, err := ConvertVerion(strings.Split(strings.Replace(v.LatestVersion.Version, "go", "", 1), "."))
 	if err != nil {
 		return false, err
 	}
 
-	localVersion, err := convertVerion(strings.Split(strings.Replace(v.LocalVersion.Version, "go", "", 1), "."))
+	localVersion, err := ConvertVerion(strings.Split(strings.Replace(v.LocalVersion.Version, "go", "", 1), "."))
 	if err != nil {
 		return false, err
 	}
@@ -33,13 +36,40 @@ func (v Versions) CheckForUpdates() (bool, error) {
 	return false, nil
 }
 
-func (v Versions) DownloadLatestVersion() error {
-	version := v.LatestVersion.Version
-	os := v.LocalVersion.Os
-	arch := v.LocalVersion.Arch
+func (v Versions) DownloadLatestVersion(downloadURL string) error {
+	log.Default().Printf("Downloading %s go version", v.LatestVersion.Version)
+	urlGenerated := false
+	fileName := ""
+	for _, file := range v.LatestVersion.Files {
+		if file.Os == v.LocalVersion.Os && file.Arch == v.LocalVersion.Arch {
+			fileName = file.Filename
+			downloadURL = downloadURL + fileName
+			urlGenerated = true
+		}
+	}
 
-	finalVersion := fmt.Sprintf("%s %s/%s", version, os, arch)
-	fmt.Println("Version to Download: ", finalVersion)
+	if !urlGenerated {
+		return fmt.Errorf("download url not found")
+	}
+
+	out, err := os.Create(fileName)
+	if err != nil {
+		return err
+	}
+
+	res, err := http.Get(downloadURL)
+	if err != nil {
+		return err
+	}
+	defer res.Body.Close()
+
+	f, err := io.Copy(out, res.Body)
+
+	if err != nil {
+		return err
+	}
+
+	fmt.Printf("Downloading completed: %s %dMb\n", fileName, f/int64(math.Pow(10, 6)))
 	return nil
 }
 
