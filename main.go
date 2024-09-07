@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/v3nkat3shk/goup/src"
+	"github.com/v9107/goup/src"
 )
 
 var update = "no"

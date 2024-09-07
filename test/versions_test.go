@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/v3nkat3shk/goup/src"
+	"github.com/v9107/goup/src"
 )
 
 func TestLocalVersion(t *testing.T) {
